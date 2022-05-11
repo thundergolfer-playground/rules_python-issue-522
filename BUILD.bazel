@@ -1,0 +1,33 @@
+
+# BUILD
+load("@rules_python//python:defs.bzl", "py_runtime", "py_runtime_pair")
+package(default_visibility = ["//visibility:public"])
+
+py_runtime(
+    name = "local_python38",
+    interpreter_path = "/usr/bin/python3.8",
+    python_version = "PY3",
+)
+
+py_runtime_pair(
+    name = "py_runtime_pair",
+    py3_runtime = ":local_python38",
+)
+
+toolchain(
+    name = "py_toolchain",
+    # target_compatible_with = <...>,
+    toolchain = ":py_runtime_pair",
+    toolchain_type = "@rules_python//python:toolchain_type",
+)
+
+py_binary(
+    name="foo",
+    srcs=["foo.py"],
+    deps=[],
+)
+
+
+load("//:test.bzl", "native_print")
+
+native_print()
